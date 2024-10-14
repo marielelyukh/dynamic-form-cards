@@ -1,0 +1,59 @@
+<div class="container">
+  <div class="form-container">
+    <div [formGroup]="formGroup" class="form-container">
+      <div formArrayName="formArray">
+        <div *ngFor="let formControl of formArray.controls; let i = index" [formGroupName]="i" class="card mb-3">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h5 class="card-title">Form {{ i + 1 }}</h5>
+              <button type="button" class="btn-close" aria-label="Close" (click)="removeForm(i)"></button>
+            </div>
+
+            <div class="mb-3">
+              <label for="country{{ i }}" class="form-label">Country</label>
+              <input class="form-control" id="country{{ i }}" type="text" formControlName="country" appAutocomplete appValidationMessage validationType="Country">
+            </div>
+
+            <div class="mb-3">
+              <label for="username{{ i }}" class="form-label">Username</label>
+              <input type="text" id="username{{ i }}" appValidationMessage validationType="Username" class="form-control" formControlName="username" (blur)="checkUsernameAvailability(formControl.get('username')?.value, i)" />
+            </div>
+
+            <div class="mb-3">
+              <label for="birthday{{ i }}" class="form-label">Birthday</label>
+              <input type="date" id="birthday{{ i }}" appValidationMessage validationType="Birthday" class="form-control" formControlName="birthday" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-between">
+        <div *ngIf="invalidFormsCount > 0" class="text-warning">
+          <i class="fas fa-exclamation-triangle"></i>
+          {{ invalidFormsCount }} invalid form(s) present.
+        </div>
+
+        <div *ngIf="showTimer && isTimerActive" class="text-info ml-3">
+          Time remaining: {{ countdown }} seconds
+        </div>
+      </div>
+
+      <div class="container d-flex justify-content-between align-items-center mt-3">
+        <button type="button" class="btn btn-primary" (click)="addForm()" title="Add another form">
+          <i class="fas fa-plus"></i> Add Another Form
+        </button>
+
+        <div class="d-flex">
+          <button type="button" class="btn btn-secondary" (click)="cancelSubmit()" *ngIf="isTimerActive">
+            Cancel
+          </button>
+
+          <button type="button" class="btn btn-success ms-3" (click)="startTimer()" [disabled]="isSubmitting || formArray.invalid || (showTimer && isTimerActive)">
+            {{ isSubmitting ? 'Submitting...' : 'Submit All Forms' }}
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
